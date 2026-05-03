@@ -17,61 +17,79 @@ public class Automata {
         this.alphabet = new HashSet<>();
         this.transitions = new HashMap<>();
         this.finalStates = new HashSet<>();
-        this.isDFA = true; // Assume DFA until proven otherwise
+        this.isDFA = true;
     }
 
     /**
-     * Reads an automaton from a file following the specified format.
-     * Format:
-     * Number of states: N
-     * States: q0 q1 q2 ... qN-1
-     * Alphabet: a b c ...
-     * Initial state: q0
-     * Final states: q2 q3
-     * Transitions:
-     * q0 a q1
-     * q0 b q2
+     * Reads an automaton from a file with format:
+     * K={q0,q1,q2}
+     * Sigma={a,b}
+     * delta:
+     * (q0,a,q0)
+     * (q0,b,q1)
      * ...
+     * s=q0
+     * F={q1}
      */
     public static Automata readFromFile(String filename) throws IOException {
         Automata aut = new Automata();
         BufferedReader reader = new BufferedReader(new FileReader(filename));
         String line;
-        boolean inDelta = false;
+        boolean readingDelta = false;
 
         while ((line = reader.readLine()) != null) {
             line = line.trim();
             if (line.isEmpty()) continue;
 
-            if (line.startsWith("k={")) {
-                // Extrae los estados
-                String content = line.substring(3, line.length() - 1);
-                aut.states.addAll(Arrays.asList(content.split(",")));
-            } else if (line.startsWith("sigma={")) {
-                // Extrae el alfabeto
-                String content = line.substring(7, line.length() - 1);
-                aut.alphabet.addAll(Arrays.asList(content.split(",")));
-            } else if (line.equals("delta:")) {
-                inDelta = true; // Comienza a leer transiciones
-            } else if (line.startsWith("(") && inDelta) {
-                // Lee las transiciones con formato (q0,a,q1)
-                String content = line.substring(1, line.length() - 1);
-                String[] parts = content.split(",");
-                if (parts.length == 3) {
-                    aut.addTransition(parts[0].trim(), parts[1].trim(), parts[2].trim());
+            if (line.startsWith("K=")) {
+                // Parse states: K={q0,q1,q2}
+                String statesStr = line.substring(2); // Remove "K="
+                statesStr = statesStr.substring(1, statesStr.length() - 1); // Remove { }
+                String[] stateArray = statesStr.split(",");
+                for (String state : stateArray) {
+                    aut.states.add(state.trim());
                 }
-            } else if (line.startsWith("s=")) {
-                inDelta = false;
-                // Extrae el estado inicial
+            }
+            else if (line.startsWith("Sigma=")) {
+                // Parse alphabet: Sigma={a,b}
+                String sigmaStr = line.substring(6); // Remove "Sigma="
+                sigmaStr = sigmaStr.substring(1, sigmaStr.length() - 1); // Remove { }
+                String[] sigmaArray = sigmaStr.split(",");
+                for (String symbol : sigmaArray) {
+                    aut.alphabet.add(symbol.trim());
+                }
+            }
+            else if (line.startsWith("delta:")) {
+                readingDelta = true;
+            }
+            else if (readingDelta && line.startsWith("(")) {
+                // Parse transition: (q0,a,q0)
+                line = line.substring(1, line.length() - 1); // Remove ( )
+                String[] parts = line.split(",");
+                if (parts.length == 3) {
+                    String from = parts[0].trim();
+                    String symbol = parts[1].trim();
+                    String to = parts[2].trim();
+                    aut.addTransition(from, symbol, to);
+                }
+            }
+            else if (line.startsWith("s=")) {
+                // Parse initial state: s=q0
                 aut.initialState = line.substring(2).trim();
-            } else if (line.startsWith("f={")) {
-                // Extrae los estados finales
-                String content = line.substring(3, line.length() - 1);
-                if (!content.isEmpty()) {
-                    aut.finalStates.addAll(Arrays.asList(content.split(",")));
+            }
+            else if (line.startsWith("F=")) {
+                // Parse final states: F={q1} or F={q1,q2}
+                String finalsStr = line.substring(2); // Remove "F="
+                finalsStr = finalsStr.substring(1, finalsStr.length() - 1); // Remove { }
+                if (!finalsStr.isEmpty()) {
+                    String[] finalArray = finalsStr.split(",");
+                    for (String finalState : finalArray) {
+                        aut.finalStates.add(finalState.trim());
+                    }
                 }
             }
         }
+
         reader.close();
         aut.determineType();
         return aut;
