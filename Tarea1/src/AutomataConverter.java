@@ -94,6 +94,26 @@ public class AutomataConverter {
         dfa.setFinalStates(dfaFinalStates);
         dfa.setDFA(true);
 
+        boolean needsTrapState = false;
+        String trapStateName = "{TRAP}";
+
+        for (String state : dfa.getStates()) {
+            Map<String, Set<String>> trans = dfa.getTransitions().getOrDefault(state, new HashMap<>());
+            for (String symbol : dfa.getAlphabet()) {
+                if (!trans.containsKey(symbol) || trans.get(symbol).isEmpty()) {
+                    dfa.addTransition(state, symbol, trapStateName);
+                    needsTrapState = true;
+                }
+            }
+        }
+
+        if (needsTrapState) {
+            dfa.getStates().add(trapStateName);
+            for (String symbol : dfa.getAlphabet()) {
+                dfa.addTransition(trapStateName, symbol, trapStateName);
+            }
+        }
+
         return dfa;
     }
 

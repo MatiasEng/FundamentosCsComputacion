@@ -37,43 +37,41 @@ public class Automata {
         Automata aut = new Automata();
         BufferedReader reader = new BufferedReader(new FileReader(filename));
         String line;
+        boolean inDelta = false;
 
         while ((line = reader.readLine()) != null) {
             line = line.trim();
             if (line.isEmpty()) continue;
 
-            if (line.startsWith("Number of states:")) {
-                // Skip - we'll get states from next line
-                continue;
-            } else if (line.startsWith("States:")) {
-                String[] states = line.substring(7).trim().split("\\s+");
-                aut.states.addAll(Arrays.asList(states));
-            } else if (line.startsWith("Alphabet:")) {
-                String[] symbols = line.substring(8).trim().split("\\s+");
-                aut.alphabet.addAll(Arrays.asList(symbols));
-            } else if (line.startsWith("Initial state:")) {
-                aut.initialState = line.substring(14).trim();
-            } else if (line.startsWith("Final states:")) {
-                String[] finals = line.substring(12).trim().split("\\s+");
-                aut.finalStates.addAll(Arrays.asList(finals));
-            } else if (line.startsWith("Transitions:")) {
-                // Read transitions until EOF
-                while ((line = reader.readLine()) != null) {
-                    line = line.trim();
-                    if (line.isEmpty()) continue;
-
-                    String[] parts = line.split("\\s+");
-                    if (parts.length == 3) {
-                        String from = parts[0];
-                        String symbol = parts[1];
-                        String to = parts[2];
-
-                        aut.addTransition(from, symbol, to);
-                    }
+            if (line.startsWith("k={")) {
+                // Extrae los estados
+                String content = line.substring(3, line.length() - 1);
+                aut.states.addAll(Arrays.asList(content.split(",")));
+            } else if (line.startsWith("sigma={")) {
+                // Extrae el alfabeto
+                String content = line.substring(7, line.length() - 1);
+                aut.alphabet.addAll(Arrays.asList(content.split(",")));
+            } else if (line.equals("delta:")) {
+                inDelta = true; // Comienza a leer transiciones
+            } else if (line.startsWith("(") && inDelta) {
+                // Lee las transiciones con formato (q0,a,q1)
+                String content = line.substring(1, line.length() - 1);
+                String[] parts = content.split(",");
+                if (parts.length == 3) {
+                    aut.addTransition(parts[0].trim(), parts[1].trim(), parts[2].trim());
+                }
+            } else if (line.startsWith("s=")) {
+                inDelta = false;
+                // Extrae el estado inicial
+                aut.initialState = line.substring(2).trim();
+            } else if (line.startsWith("f={")) {
+                // Extrae los estados finales
+                String content = line.substring(3, line.length() - 1);
+                if (!content.isEmpty()) {
+                    aut.finalStates.addAll(Arrays.asList(content.split(",")));
                 }
             }
         }
-
         reader.close();
         aut.determineType();
         return aut;
