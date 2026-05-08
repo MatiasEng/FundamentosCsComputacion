@@ -1,0 +1,9 @@
+K={u0,u1}
+Sigma={a,b}
+delta:
+(u0,a,u1)
+(u0,b,u0)
+(u1,a,u1)
+(u1,b,u1)
+s=u0
+F={u1}

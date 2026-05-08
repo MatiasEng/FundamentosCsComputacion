@@ -1,0 +1,13 @@
+K={v0,v1,v2,v3}
+Sigma={a,b}
+delta:
+(v0,a,v1)
+(v0,b,v0)
+(v1,a,v1)
+(v1,b,v2)
+(v2,a,v1)
+(v2,b,v3)
+(v3,a,v3)
+(v3,b,v3)
+s=v0
+F={v1}

@@ -1,0 +1,9 @@
+K={par,impar}
+Sigma={a,b}
+delta:
+(par,a,impar)
+(par,b,par)
+(impar,a,par)
+(impar,b,impar)
+s=par
+F={par}
