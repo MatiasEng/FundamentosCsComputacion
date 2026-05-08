@@ -63,7 +63,7 @@ public class Automata {
             if (linea.isEmpty()) continue;                // Salta líneas vacías
 
             // ===== LECTURA DE ESTADOS =====
-            if (linea.startsWith("K=")) {
+            if (linea.startsWith("K=") || linea.startsWith("k=")) {
                 // Ejemplo: "K={q0,q1,q2}" -> extraer "q0,q1,q2"
                 String estadosStr = linea.substring(2);                    // Elimina "K="
                 estadosStr = estadosStr.substring(1, estadosStr.length() - 1); // Elimina las llaves { }
@@ -74,7 +74,7 @@ public class Automata {
             }
 
             // ===== LECTURA DEL ALFABETO =====
-            else if (linea.startsWith("Sigma=")) {
+            else if (linea.startsWith("Sigma=") || linea.startsWith("sigma=")) {
                 // Ejemplo: "Sigma={a,b}" -> extraer "a,b"
                 String sigmaStr = linea.substring(6);                      // Elimina "Sigma="
                 sigmaStr = sigmaStr.substring(1, sigmaStr.length() - 1);   // Elimina las llaves { }
@@ -109,7 +109,7 @@ public class Automata {
             }
 
             // ===== LECTURA DE ESTADOS FINALES =====
-            else if (linea.startsWith("F=")) {
+            else if (linea.startsWith("F=") || linea.startsWith("f=")) {
                 // Ejemplo: "F={q1}" o "F={q1,q2}" -> extraer estados finales
                 String finalesStr = linea.substring(2);                    // Elimina "F="
                 finalesStr = finalesStr.substring(1, finalesStr.length() - 1); // Elimina llaves { }
