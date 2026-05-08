@@ -166,7 +166,7 @@ public class Automata {
         for (String estado : transiciones.keySet()) {
             Map<String, Set<String>> transicionesDelEstado = transiciones.get(estado);
             // Si existe alguna transición con el símbolo "ε" (épsilon)
-            if (transicionesDelEstado.containsKey("ε")) {
+            if (transicionesDelEstado.containsKey("eps")) {
                 esAFD = false;    // Marca como AFND (no determinista)
                 return;           // Termina el método inmediatamente
             }

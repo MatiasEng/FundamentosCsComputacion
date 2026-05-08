@@ -1,9 +1,0 @@
-K={p0,p1}
-Sigma={a,b}
-delta:
-(p0,a,p1)
-(p0,b,p0)
-(p1,a,p1)
-(p1,b,p1)
-s=p0
-F={p1}

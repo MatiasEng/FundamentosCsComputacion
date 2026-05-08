@@ -234,9 +234,9 @@ public class AutomataConverter {
             Map<String, Set<String>> transicionesEstado = afnd.getTransiciones().get(estado);
 
             // Si existen transiciones épsilon (ε) desde este estado
-            if (transicionesEstado != null && transicionesEstado.containsKey("ε")) {
+            if (transicionesEstado != null && transicionesEstado.containsKey("eps")) {
                 // Para cada destino de la transición épsilon
-                for (String siguienteEstado : transicionesEstado.get("ε")) {
+                for (String siguienteEstado : transicionesEstado.get("eps")) {
                     // Si no está ya en la clausura, lo agregamos y lo apilamos
                     if (!clausura.contains(siguienteEstado)) {
                         clausura.add(siguienteEstado);
