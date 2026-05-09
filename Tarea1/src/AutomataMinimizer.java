@@ -1,59 +1,51 @@
-import java.util.*;    // Importa colecciones (List, Set, Map, Queue, ArrayList, HashSet, etc.)
+import java.util.*;
 
 /**
- * Clase que minimiza un Autómata Finito Determinista (AFD).
+ * Clase que minimiza un Automata Finito Determinista (AFD).
  *
- * La minimización reduce el número de estados de un AFD manteniendo el mismo lenguaje.
- * Utiliza el algoritmo de partición (también conocido como algoritmo de Hopcroft simplificado
+ * La minimizacion reduce el numero de estados de un AFD manteniendo el mismo lenguaje.
+ * Utiliza el algoritmo de particion (tambien conocido como algoritmo de Hopcroft simplificado
  * o algoritmo de llenado de tabla).
  *
  * El algoritmo funciona agrupando estados equivalentes (indistinguibles) y
- * fusionándolos en un solo estado.
+ * fusionandolos en un solo estado.
  *
- * @authors [Tus Nombres Aquí]
- * @version 1.0
  */
 public class AutomataMinimizer {
 
     /**
-     * Minimiza un Autómata Finito Determinista (AFD).
+     * Minimiza un Automata Finito Determinista (AFD).
      *
-     * El proceso de minimización consta de los siguientes pasos:
+     * El proceso de minimizacion consta de los siguientes pasos:
      * 1. Eliminar estados inalcanzables (desde el estado inicial)
-     * 2. Separar estados finales de no finales (partición inicial)
+     * 2. Separar estados finales de no finales (particion inicial)
      * 3. Refinar particiones iterativamente hasta que no cambien
      * 4. Construir un nuevo AFD con los grupos de estados equivalentes
      *
-     * @param afd El autómata determinista a minimizar (debe ser AFD)
+     * @param afd El automata determinista a minimizar (debe ser AFD)
      * @return Un nuevo AFD minimizado equivalente al original
-     * @throws IllegalArgumentException Si el autómata no es AFD
+     * @throws IllegalArgumentException Si el automata no es AFD
      */
     public static Automata minimize(Automata afd) {
 
-        // ================================================================
-        // VERIFICACIÓN: El autómata debe ser AFD
-        // ================================================================
+        // VERIFICACION: El automata debe ser AFD
         if (!afd.esAFD()) {
-            throw new IllegalArgumentException("El autómata debe ser un AFD para minimizarlo.");
+            throw new IllegalArgumentException("El automata debe ser un AFD para minimizarlo.");
         }
 
-        // ================================================================
         // PASO 1: Eliminar estados inalcanzables
-        // ================================================================
         // Los estados que no se pueden alcanzar desde el estado inicial
         // no afectan el lenguaje y pueden ser eliminados
         Set<String> estadosAlcanzables = obtenerEstadosAlcanzables(afd);
 
-        // ================================================================
-        // PASO 2: Separación inicial (finales vs no finales)
-        // ================================================================
-        // La partición inicial separa los estados finales de los no finales
+        // PASO 2: Separacion inicial (finales vs no finales)
+        // La particion inicial separa los estados finales de los no finales
         // ya que un estado final y uno no final NUNCA pueden ser equivalentes
 
         Set<String> estadosFinales = new HashSet<>();
         Set<String> estadosNoFinales = new HashSet<>();
 
-        // Clasifica cada estado alcanzable según sea final o no
+        // Clasifica cada estado alcanzable segun sea final o no
         for (String estado : estadosAlcanzables) {
             if (afd.getEstadosFinales().contains(estado)) {
                 estadosFinales.add(estado);      // Estado final
@@ -65,17 +57,15 @@ public class AutomataMinimizer {
         // Lista de particiones (grupos de estados equivalentes)
         List<Set<String>> particiones = new ArrayList<>();
 
-        // Agrega grupos no vacíos a la lista de particiones
+        // Agrega grupos no vacios a la lista de particiones
         if (!estadosFinales.isEmpty()) particiones.add(estadosFinales);
         if (!estadosNoFinales.isEmpty()) particiones.add(estadosNoFinales);
 
-        // ================================================================
         // PASO 3: Refinar particiones iterativamente
-        // ================================================================
-        // Algoritmo de partición:
+        // Algoritmo de particion:
         // Repetir hasta que no haya cambios:
-        //   Para cada grupo, dividirlo según el comportamiento de las transiciones
-        //   Dos estados son equivalentes si para cada símbolo:
+        //   Para cada grupo, dividirlo segun el comportamiento de las transiciones
+        //   Dos estados son equivalentes si para cada simbolo:
         //     - Van al mismo grupo (no necesariamente al mismo estado)
         //     - Ambos son finales o ambos no finales
 
@@ -84,27 +74,27 @@ public class AutomataMinimizer {
             huboCambio = false;
             List<Set<String>> nuevasParticiones = new ArrayList<>();
 
-            // Procesa cada grupo de la partición actual
+            // Procesa cada grupo de la particion actual
             for (Set<String> grupo : particiones) {
                 // Mapa: firma (comportamiento) -> conjunto de estados con esa firma
-                // La firma describe a qué grupos van las transiciones para cada símbolo
+                // La firma describe a que grupos van las transiciones para cada simbolo
                 Map<String, Set<String>> estadosPorFirma = new HashMap<>();
 
                 // Para cada estado en el grupo, calcula su firma
                 for (String estado : grupo) {
                     // Construye la firma del estado
                     // La firma es un string que codifica:
-                    //   Para cada símbolo del alfabeto, a qué grupo de destino va
+                    //   Para cada simbolo del alfabeto, a que grupo de destino va
                     StringBuilder firma = new StringBuilder();
 
                     for (String simbolo : afd.getAlfabeto()) {
-                        // Obtiene el estado destino para este símbolo
+                        // Obtiene el estado destino para este simbolo
                         String destino = obtenerEstadoDestino(afd, estado, simbolo);
 
-                        // Encuentra a qué grupo pertenece el estado destino
+                        // Encuentra a que grupo pertenece el estado destino
                         int indiceGrupo = encontrarIndiceGrupo(particiones, destino);
 
-                        // Agrega la información a la firma
+                        // Agrega la informacion a la firma
                         firma.append(simbolo).append("->").append(indiceGrupo).append(";");
                     }
 
@@ -114,7 +104,7 @@ public class AutomataMinimizer {
                     estadosPorFirma.get(claveFirma).add(estado);
                 }
 
-                // Si el grupo se dividió en múltiples subgrupos, hubo cambio
+                // Si el grupo se dividio en multiples subgrupos, hubo cambio
                 nuevasParticiones.addAll(estadosPorFirma.values());
                 if (estadosPorFirma.size() > 1) {
                     huboCambio = true;    // Se encontraron diferencias entre estados
@@ -125,22 +115,18 @@ public class AutomataMinimizer {
             particiones = nuevasParticiones;
         }
 
-        // ================================================================
         // PASO 4: Construir el AFD minimizado
-        // ================================================================
-        // Cada grupo de la partición final se convierte en un estado del AFD minimizado
+        // Cada grupo de la particion final se convierte en un estado del AFD minimizado
         return construirAFDMinimizado(afd, particiones, estadosAlcanzables);
     }
 
     /**
      * Obtiene el conjunto de estados alcanzables desde el estado inicial.
      *
-     * Utiliza un recorrido BFS (Búsqueda en Anchura) para explorar todos
+     * Utiliza un recorrido BFS (Busqueda en Anchura) para explorar todos
      * los estados que se pueden alcanzar desde el estado inicial.
      * Los estados no alcanzables pueden ser eliminados sin afectar el lenguaje.
      *
-     * @param afd El autómata determinista
-     * @return Conjunto de estados alcanzables
      */
     private static Set<String> obtenerEstadosAlcanzables(Automata afd) {
         Set<String> alcanzables = new HashSet<>();
@@ -158,7 +144,7 @@ public class AutomataMinimizer {
             Map<String, Set<String>> trans = afd.getTransiciones().get(estado);
 
             if (trans != null) {
-                // Para cada símbolo del alfabeto
+                // Para cada simbolo del alfabeto
                 for (String simbolo : afd.getAlfabeto()) {
                     Set<String> destinos = trans.get(simbolo);
                     if (destinos != null) {
@@ -178,57 +164,57 @@ public class AutomataMinimizer {
     }
 
     /**
-     * Obtiene el estado destino desde un estado dado con un símbolo específico.
+     * Obtiene el estado destino desde un estado dado con un simbolo especifico.
      *
-     * En un AFD, para cada (estado, símbolo) solo hay un destino.
+     * En un AFD, para cada (estado, simbolo) solo hay un destino.
      *
-     * @param afd El autómata determinista
+     * @param afd El automata determinista
      * @param estado Estado actual
-     * @param simbolo Símbolo de entrada
-     * @return Estado destino, o null si no existe transición
+     * @param simbolo Simbolo de entrada
+     * @return Estado destino, o null si no existe transicion
      */
     private static String obtenerEstadoDestino(Automata afd, String estado, String simbolo) {
         Map<String, Set<String>> trans = afd.getTransiciones().get(estado);
         if (trans != null && trans.containsKey(simbolo)) {
-            // Retorna el primer (y único) elemento del conjunto de destinos
+            // Retorna el primer (y unico) elemento del conjunto de destinos
             return trans.get(simbolo).iterator().next();
         }
         return null;
     }
 
     /**
-     * Encuentra el índice del grupo al que pertenece un estado.
+     * Encuentra el indice del grupo al que pertenece un estado.
      *
      * @param particiones Lista de grupos (conjuntos de estados)
      * @param estado Estado a buscar
-     * @return Índice del grupo (0, 1, 2, ...) o -1 si no se encuentra
+     * @return Indice del grupo (0, 1, 2, ...) o -1 si no se encuentra
      */
     private static int encontrarIndiceGrupo(List<Set<String>> particiones, String estado) {
-        if (estado == null) return -1;   // Estado nulo (transición indefinida)
+        if (estado == null) return -1;   // Estado nulo (transicion indefinida)
 
         for (int i = 0; i < particiones.size(); i++) {
             if (particiones.get(i).contains(estado)) {
-                return i;   // Retorna el índice del grupo
+                return i;   // Retorna el indice del grupo
             }
         }
-        return -1;   // No encontrado (no debería ocurrir)
+        return -1;   // No encontrado (no deberia ocurrir)
     }
 
     /**
      * Construye un nuevo AFD minimizado a partir de las particiones de equivalencia.
      *
-     * Cada grupo de la partición se convierte en un estado del nuevo autómata.
+     * Cada grupo de la particion se convierte en un estado del nuevo automata.
      * El nombre del estado refleja los estados originales que contiene.
      *
      * @param afdOriginal AFD original antes de minimizar
      * @param particiones Grupos de estados equivalentes
-     * @param alcanzables Estados alcanzables del autómata original
+     * @param alcanzables Estados alcanzables del automata original
      * @return AFD minimizado
      */
     private static Automata construirAFDMinimizado(Automata afdOriginal,
                                                    List<Set<String>> particiones,
                                                    Set<String> alcanzables) {
-        // Crea un nuevo autómata para el resultado minimizado
+        // Crea un nuevo automata para el resultado minimizado
         Automata afdMin = new Automata();
         afdMin.setAlfabeto(new HashSet<>(afdOriginal.getAlfabeto()));
         afdMin.setEsAFD(true);   // El resultado siempre es AFD
@@ -238,7 +224,7 @@ public class AutomataMinimizer {
         // ================================================================
         Map<String, String> estadoAGrupo = new HashMap<>();
 
-        // Procesa cada grupo de la partición
+        // Procesa cada grupo de la particion
         for (Set<String> grupo : particiones) {
             // Genera un nombre para el grupo (ej: "M{q0,q1}" o "M{q2}")
             String nombreGrupo = "M{" + String.join(",", grupo) + "}";
@@ -255,17 +241,15 @@ public class AutomataMinimizer {
                     afdMin.setEstadoInicial(nombreGrupo);
                 }
 
-                // Si el grupo contiene algún estado final, el nuevo estado es final
+                // Si el grupo contiene algun estado final, el nuevo estado es final
                 if (afdOriginal.getEstadosFinales().contains(estado)) {
                     afdMin.getEstadosFinales().add(nombreGrupo);
                 }
             }
         }
 
-        // ================================================================
         // Construir las transiciones del AFD minimizado
-        // ================================================================
-        // Para cada estado alcanzable del autómata original
+        // Para cada estado alcanzable del automata original
         for (String estado : alcanzables) {
             String grupoOrigen = estadoAGrupo.get(estado);
 
@@ -273,19 +257,19 @@ public class AutomataMinimizer {
             Map<String, Set<String>> trans = afdOriginal.getTransiciones().get(estado);
 
             if (trans != null) {
-                // Para cada símbolo del alfabeto
+                // Para cada simbolo del alfabeto
                 for (String simbolo : afdOriginal.getAlfabeto()) {
                     Set<String> destinos = trans.get(simbolo);
 
-                    // Si existe transición para este símbolo
+                    // Si existe transicion para este simbolo
                     if (destinos != null && !destinos.isEmpty()) {
                         // Obtiene el destino (en AFD solo hay uno)
                         String destino = destinos.iterator().next();
 
-                        // Encuentra a qué grupo pertenece el destino
+                        // Encuentra a que grupo pertenece el destino
                         String grupoDestino = estadoAGrupo.get(destino);
 
-                        // Agrega la transición al AFD minimizado
+                        // Agrega la transicion al AFD minimizado
                         afdMin.agregarTransicion(grupoOrigen, simbolo, grupoDestino);
                     }
                 }

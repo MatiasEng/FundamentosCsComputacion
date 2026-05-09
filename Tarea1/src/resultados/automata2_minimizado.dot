@@ -1,0 +1,13 @@
+digraph Automata {
+  rankdir=LR;
+  "" [shape=none];
+  "M{{p2}}" [shape=doublecircle];
+  node [shape=circle];
+  "" -> "M{{p1},{p0,p1}}";
+  "M{{p2}}" -> "M{{p1},{p0,p1}}" [label="a"];
+  "M{{p2}}" -> "M{{p3}}" [label="b"];
+  "M{{p3}}" -> "M{{p1},{p0,p1}}" [label="a"];
+  "M{{p3}}" -> "M{{p3}}" [label="b"];
+  "M{{p1},{p0,p1}}" -> "M{{p1},{p0,p1}}" [label="a"];
+  "M{{p1},{p0,p1}}" -> "M{{p2}}" [label="b"];
+}
