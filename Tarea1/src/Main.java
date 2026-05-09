@@ -51,7 +51,12 @@ public class Main {
                 System.out.println("  Archivo 2: " + nombreArchivo2);
             }
 
+            // Busca la carpeta "input". Si estamos dentro de "src", retrocede un nivel ("../input")
             String directorio = "input";
+            if (!new File(directorio).exists() && new File(".." + File.separator + "input").exists()) {
+                directorio = ".." + File.separator + "input";
+            }
+
             String rutaArchivo1 = (nombreArchivo1.contains("/") || nombreArchivo1.contains("\\")) ?
                     nombreArchivo1 : directorio + File.separator + nombreArchivo1;
             String rutaArchivo2 = (nombreArchivo2.contains("/") || nombreArchivo2.contains("\\")) ?
