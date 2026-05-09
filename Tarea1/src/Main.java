@@ -10,7 +10,7 @@ import java.util.*;    // Importa colecciones y utilidades
  * 2. Convierte a AFD si es necesario (si alguno es AFND)
  * 3. Minimiza ambos autómatas
  * 4. Compara si son equivalentes (aceptan el mismo lenguaje)
- * 5. Genera diagramas visuales usando GraphViz
+ * 5. Genera diagramas visuales usando GraphViz (original, AFD, minimizado)
  *
  * @authors [Tus Nombres Aquí]
  * @version 1.0
@@ -38,14 +38,12 @@ public class Main {
             String nombreArchivo1, nombreArchivo2;
 
             if (args.length >= 2) {
-                // Si se pasan argumentos, usarlos (con ruta relativa o absoluta)
                 nombreArchivo1 = args[0];
                 nombreArchivo2 = args[1];
                 System.out.println("Usando archivos especificados en argumentos:");
                 System.out.println("  Archivo 1: " + nombreArchivo1);
                 System.out.println("  Archivo 2: " + nombreArchivo2);
             } else {
-                // Si no hay argumentos, usar los nombres por defecto dentro de input/
                 System.out.println("No se proporcionaron argumentos. Usando archivos por defecto.");
                 nombreArchivo1 = "automaton1.txt";
                 nombreArchivo2 = "automaton2.txt";
@@ -53,8 +51,6 @@ public class Main {
                 System.out.println("  Archivo 2: " + nombreArchivo2);
             }
 
-            // Asegurar que los archivos se busquen dentro de la carpeta "input/",
-            // a menos que ya tengan una ruta (contengan '/' o '\')
             String directorio = "input";
             String rutaArchivo1 = (nombreArchivo1.contains("/") || nombreArchivo1.contains("\\")) ?
                     nombreArchivo1 : directorio + File.separator + nombreArchivo1;
@@ -93,7 +89,7 @@ public class Main {
             System.out.println("Autómata 2: " + aut2.getType());
 
             // ================================================================
-            // MOSTRAR INFORMACIÓN DETALLADA (opcional, para depuración)
+            // MOSTRAR INFORMACIÓN DETALLADA (opcional)
             // ================================================================
             System.out.println("\n--- Detalles del Autómata 1 ---");
             System.out.println("Estados: " + aut1.getEstados());
@@ -108,6 +104,13 @@ public class Main {
             System.out.println("Estados finales: " + aut2.getEstadosFinales());
 
             // ================================================================
+            // GENERAR DIAGRAMAS DE LOS AUTÓMATAS ORIGINALES
+            // ================================================================
+            System.out.println("\n=== Generando diagramas de los autómatas originales ===");
+            GraphVizGenerator.generateGraph(aut1, "automata1_original");
+            GraphVizGenerator.generateGraph(aut2, "automata2_original");
+
+            // ================================================================
             // PASO 2: CONVERSIÓN A AFD (si es necesario)
             // ================================================================
             System.out.println("\n=== Paso 2: Convirtiendo a AFD ===");
@@ -117,6 +120,13 @@ public class Main {
             System.out.println("Después de la conversión:");
             System.out.println("Autómata 1: " + afd1.getType());
             System.out.println("Autómata 2: " + afd2.getType());
+
+            // ================================================================
+            // GENERAR DIAGRAMAS DE LOS AFD CONVERTIDOS (no minimizados)
+            // ================================================================
+            System.out.println("\n=== Generando diagramas de los AFD convertidos ===");
+            GraphVizGenerator.generateGraph(afd1, "automata1_afd");
+            GraphVizGenerator.generateGraph(afd2, "automata2_afd");
 
             // ================================================================
             // PASO 3: MINIMIZACIÓN Y VERIFICACIÓN DE EQUIVALENCIA
@@ -138,18 +148,27 @@ public class Main {
             System.out.println("==========================================\n");
 
             // ================================================================
-            // PASO 4: GENERACIÓN DE VISUALIZACIONES CON GRAPHVIZ
+            // GENERAR DIAGRAMAS DE LOS AUTÓMATAS MINIMIZADOS
             // ================================================================
-            System.out.println("=== Paso 4: Generando Visualizaciones ===");
-            // Se generan en el directorio actual (se puede cambiar a "output/" si se desea)
-            GraphVizGenerator.generateGraph(min1, "automaton1_minimized");
-            GraphVizGenerator.generateGraph(min2, "automaton2_minimized");
+            System.out.println("=== Generando diagramas de los autómatas minimizados ===");
+            GraphVizGenerator.generateGraph(min1, "automata1_minimizado");
+            GraphVizGenerator.generateGraph(min2, "automata2_minimizado");
 
+            // ================================================================
+            // FINALIZACIÓN
+            // ================================================================
             System.out.println("\n=== Proceso Completado ===");
-            System.out.println("Para ver los diagramas:");
-            System.out.println("  - Archivos DOT generados: automaton1_minimized.dot, automaton2_minimized.dot");
-            System.out.println("  - Imágenes PNG (si GraphViz instalado): automaton1_minimized.png, automaton2_minimized.png");
-            System.out.println("  - Generación manual: dot -Tpng archivo.dot -o archivo.png");
+            System.out.println("Archivos generados (3 versiones por autómata):");
+            System.out.println("  Automata 1:");
+            System.out.println("    - automata1_original.dot/.png");
+            System.out.println("    - automata1_afd.dot/.png");
+            System.out.println("    - automata1_minimizado.dot/.png");
+            System.out.println("  Automata 2:");
+            System.out.println("    - automata2_original.dot/.png");
+            System.out.println("    - automata2_afd.dot/.png");
+            System.out.println("    - automata2_minimizado.dot/.png");
+            System.out.println("Si GraphViz no generó las imágenes, instálalo o ejecuta manualmente:");
+            System.out.println("  dot -Tpng archivo.dot -o archivo.png");
 
         } catch (Exception e) {
             System.err.println("Error durante la ejecución: " + e.getMessage());
