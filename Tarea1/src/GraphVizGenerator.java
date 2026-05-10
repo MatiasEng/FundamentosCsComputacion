@@ -6,8 +6,8 @@ import java.io.*;
  * GraphViz es una herramienta externa que convierte descripciones en formato DOT
  * a imagenes (PNG, PDF, SVG, etc.).
  *
- * El proceso consta de dos pasos:
- * 1. Generar un archivo .dot con la descripcion del automata en lenguaje DOT
+ * El proceso tiene dos pasos:
+ * 1. Generar un archivo .dot 
  * 2. Ejecutar el comando "dot" de GraphViz para convertir el .dot a .png
  *
  * Para que esta clase funcione correctamente, GraphViz debe estar instalado
@@ -28,9 +28,6 @@ public class GraphVizGenerator {
      * @param aut El automata a visualizar (puede ser AFD o AFND)
      * @param filename Nombre base para los archivos de salida (sin extension)
      *
-     * @example
-     * GraphVizGenerator.generateGraph(automataMinimizado, "automaton1_minimized");
-     * // Genera: resultados/automaton1_minimized.dot y resultados/automaton1_minimized.png
      */
     public static void generateGraph(Automata aut, String filename) {
         try {
@@ -85,7 +82,7 @@ public class GraphVizGenerator {
             escritor.write("  \"\" -> \"" + aut.getEstadoInicial() + "\";\n");
 
             // TRANSICIONES (FLECHAS ENTRE ESTADOS)
-            // Recorre todas las transiciones del automata
+            // Recorre todas las transiciones del autonata
             // Estructura: transiciones[estado_origen][simbolo] = conjunto de estados_destino
 
             for (String origen : aut.getTransiciones().keySet()) {          // Para cada estado origen
@@ -135,9 +132,8 @@ public class GraphVizGenerator {
             System.err.println("Error: El proceso de GraphViz fue interrumpido.");
 
         } catch (Exception e) {
-            // Cualquier otro error (ej: GraphViz no encontrado)
+            // Cualquier otro error 
             System.err.println("Error generando el grafico: Asegurate de tener GraphViz instalado.");
-            System.err.println("Puedes descargarlo desde: https://graphviz.org/download/");
         }
     }
 }

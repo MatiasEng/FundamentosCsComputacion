@@ -127,7 +127,7 @@ public class Automata {
     /**
      * Agrega una transicion al automata.
      * La estructura de transiciones permite multiples destinos para el mismo
-     * estado y simbolo (necesario para AFND).
+     * estado y simbolo (necsario para AFND).
      *
      * Estructura: transiciones[estado_origen][simbolo] = conjunto de estados_destino
      *
@@ -150,7 +150,7 @@ public class Automata {
      * Determina si el automata es AFD (Automata Finito Determinista) o AFND (Automata Finito No Determinista).
      *
      * Un automata es NO determinista (AFND) si cumple ALGUNA de estas condiciones:
-     * 1. TIENE TRANSICIONES EPSILON (eps) - esto lo hace automaticamente AFND
+     * 1. TIENE TRANSICIONES EPSILN (eps) - esto lo hace automaticamente AFND
      * 2. Un mismo estado tiene multiples transiciones con el mismo simbolo del alfabeto
      * 3. Faltan transiciones para algun simbolo del alfabeto en algun estado
      *
@@ -162,7 +162,7 @@ public class Automata {
         // Permiten cambiar de estado sin consumir ningun simbolo de entrada
         for (String estado : transiciones.keySet()) {
             Map<String, Set<String>> transicionesDelEstado = transiciones.get(estado);
-            // Si existe alguna transicion con el simbolo "ε" (epsilon)
+            // Si existe alguna transicoon con el simbolo "eps" (epsilon)
             if (transicionesDelEstado.containsKey("eps")) {
                 esAFD = false;    // Marca como AFND (no determinista)
                 return;           // Termina el metodo inmediatamente
@@ -253,7 +253,7 @@ public class Automata {
         return estadosFinales;
     }
 
-    // ==================== METODOS SETTER ====================
+    // METODOS SETTER 
 
     /**
      * Establece el conjunto de estados del automata.

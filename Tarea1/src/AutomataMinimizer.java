@@ -4,10 +4,8 @@ import java.util.*;
  * Clase que minimiza un Automata Finito Determinista (AFD).
  *
  * La minimizacion reduce el numero de estados de un AFD manteniendo el mismo lenguaje.
- * Utiliza el algoritmo de particion (tambien conocido como algoritmo de Hopcroft simplificado
- * o algoritmo de llenado de tabla).
  *
- * El algoritmo funciona agrupando estados equivalentes (indistinguibles) y
+ * El algoritmo funciona agrupando estados equivalentes  y
  * fusionandolos en un solo estado.
  *
  */
@@ -20,11 +18,10 @@ public class AutomataMinimizer {
      * 1. Eliminar estados inalcanzables (desde el estado inicial)
      * 2. Separar estados finales de no finales (particion inicial)
      * 3. Refinar particiones iterativamente hasta que no cambien
-     * 4. Construir un nuevo AFD con los grupos de estados equivalentes
+     * 4. Construir un nuevo AFD con los grpos de estados equivalentes
      *
      * @param afd El automata determinista a minimizar (debe ser AFD)
      * @return Un nuevo AFD minimizado equivalente al original
-     * @throws IllegalArgumentException Si el automata no es AFD
      */
     public static Automata minimize(Automata afd) {
 
@@ -35,7 +32,7 @@ public class AutomataMinimizer {
 
         // PASO 1: Eliminar estados inalcanzables
         // Los estados que no se pueden alcanzar desde el estado inicial
-        // no afectan el lenguaje y pueden ser eliminados
+        // no afectan el lenguaje y pueden ser eliminado
         Set<String> estadosAlcanzables = obtenerEstadosAlcanzables(afd);
 
         // PASO 2: Separacion inicial (finales vs no finales)
@@ -61,7 +58,7 @@ public class AutomataMinimizer {
         if (!estadosFinales.isEmpty()) particiones.add(estadosFinales);
         if (!estadosNoFinales.isEmpty()) particiones.add(estadosNoFinales);
 
-        // PASO 3: Refinar particiones iterativamente
+        // PASO 3: perfeccionar particiones iterativamente
         // Algoritmo de particion:
         // Repetir hasta que no haya cambios:
         //   Para cada grupo, dividirlo segun el comportamiento de las transiciones
@@ -104,10 +101,10 @@ public class AutomataMinimizer {
                     estadosPorFirma.get(claveFirma).add(estado);
                 }
 
-                // Si el grupo se dividio en multiples subgrupos, hubo cambio
+                // Si el grupo se dividio en multiples subgrupos, hay cambios
                 nuevasParticiones.addAll(estadosPorFirma.values());
                 if (estadosPorFirma.size() > 1) {
-                    huboCambio = true;    // Se encontraron diferencias entre estados
+                    huboCambio = true;    
                 }
             }
 
@@ -123,7 +120,7 @@ public class AutomataMinimizer {
     /**
      * Obtiene el conjunto de estados alcanzables desde el estado inicial.
      *
-     * Utiliza un recorrido BFS (Busqueda en Anchura) para explorar todos
+     * Utiliza un recorrido BFS  para recorrer todos
      * los estados que se pueden alcanzar desde el estado inicial.
      * Los estados no alcanzables pueden ser eliminados sin afectar el lenguaje.
      *
@@ -132,7 +129,6 @@ public class AutomataMinimizer {
         Set<String> alcanzables = new HashSet<>();
         Queue<String> cola = new LinkedList<>();
 
-        // Comienza desde el estado inicial
         cola.add(afd.getEstadoInicial());
         alcanzables.add(afd.getEstadoInicial());
 
@@ -168,10 +164,6 @@ public class AutomataMinimizer {
      *
      * En un AFD, para cada (estado, simbolo) solo hay un destino.
      *
-     * @param afd El automata determinista
-     * @param estado Estado actual
-     * @param simbolo Simbolo de entrada
-     * @return Estado destino, o null si no existe transicion
      */
     private static String obtenerEstadoDestino(Automata afd, String estado, String simbolo) {
         Map<String, Set<String>> trans = afd.getTransiciones().get(estado);
@@ -206,10 +198,6 @@ public class AutomataMinimizer {
      * Cada grupo de la particion se convierte en un estado del nuevo automata.
      * El nombre del estado refleja los estados originales que contiene.
      *
-     * @param afdOriginal AFD original antes de minimizar
-     * @param particiones Grupos de estados equivalentes
-     * @param alcanzables Estados alcanzables del automata original
-     * @return AFD minimizado
      */
     private static Automata construirAFDMinimizado(Automata afdOriginal,
                                                    List<Set<String>> particiones,
@@ -248,7 +236,7 @@ public class AutomataMinimizer {
             }
         }
 
-        // Construir las transiciones del AFD minimizado
+        // Construir las transiciones del AFD mininizado
         // Para cada estado alcanzable del automata original
         for (String estado : alcanzables) {
             String grupoOrigen = estadoAGrupo.get(estado);
