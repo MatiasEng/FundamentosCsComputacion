@@ -1,0 +1,24 @@
+Package lrc;
+
+Helpers
+    digit = ['0' .. '9'];
+    letter = ['a' .. 'z'] | ['A' .. 'Z'];
+    cr = 13;
+    lf = 10;
+    newline = cr lf | lf | cr;
+    apostrophe = 39;
+
+Tokens
+    l_bracket = '[';
+    r_bracket = ']';
+    bcontent = (letter | digit | ' ' | '.' | ',' | '!' | '?' | '-' | '_' | ';' | '/' | '\\' | '(' | ')' | '#' | '$' | '%' | '&' | '*' | '+' | '=' | '<' | '>' | '@' | '^' | '`' | '{' | '|' | '}' | '~' | apostrophe | ':')+;
+    blank = ' ' | 9 | newline;
+
+Ignored Tokens
+    blank;
+
+Productions
+    lrc_file = element*;
+    element =
+        {tag_line} l_bracket bcontent r_bracket |
+        {tagged_line} l_bracket [tag]:bcontent r_bracket [lyric]:bcontent;
