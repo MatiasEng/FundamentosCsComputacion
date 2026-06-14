@@ -8,13 +8,14 @@ Usa SableCC para generar un parser de archivos `.lrc`.
 ```
 Tarea2/
 ├── lrc.sablecc              # Gramática SableCC
-├── lrc/                     # Código generado por SableCC
+├── lrc/                     # Código generado por SableCC + clases del proyecto
 │   ├── analysis/
-│   │   └── LyricVisitor.java   # Visitador del AST
+│   │   ├── LyricVisitor.java   # Visitador del AST
+│   │   └── ...
 │   ├── lexer/
 │   ├── node/
-│   └── parser/
-├── Reproductor.java         # Clase principal con interfaz gráfica
+│   ├── parser/
+│   └── Reproductor.java     # Clase principal con interfaz gráfica
 ├── lib/                     # Librerías (BasicPlayer, etc.)
 ├── *.lrc                    # Archivos de letra
 └── *.mp3                    # Archivos de audio
@@ -32,20 +33,20 @@ Tarea2/
 java -jar sablecc-3.7/lib/sablecc.jar lrc.sablecc
 
 # 2. Compilar todo
-javac -cp "lib/*:." lrc/analysis/*.java lrc/lexer/*.java lrc/node/*.java lrc/parser/*.java Reproductor.java
+javac -cp "lib/*:." lrc/analysis/*.java lrc/lexer/*.java lrc/node/*.java lrc/parser/*.java lrc/Reproductor.java
 ```
 
 ## Uso
 
 ```bash
 # Con ambos archivos
-java -cp "lib/*:." Reproductor cancion.mp3 cancion.lrc
+java -cp "lib/*:." lrc.Reproductor cancion.mp3 cancion.lrc
 
 # Si el .lrc tiene el mismo nombre que el .mp3
-java -cp "lib/*:." Reproductor cancion.mp3
+java -cp "lib/*:." lrc.Reproductor cancion.mp3
 
 # Ejemplo real
-java -cp "lib/*:." Reproductor "Evanescence - Bring Me To Life (Official HD Music Video).mp3" "bring me to life.lrc"
+java -cp "lib/*:." lrc.Reproductor "Evanescence - Bring Me To Life (Official HD Music Video).mp3" "bring me to life.lrc"
 ```
 
 ## Gramática (lrc.sablecc)

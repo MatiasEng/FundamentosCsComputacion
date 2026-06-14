@@ -1,3 +1,5 @@
+package lrc;
+
 import javazoom.jlgui.basicplayer.BasicPlayer;
 import java.io.*;
 import java.util.List;
