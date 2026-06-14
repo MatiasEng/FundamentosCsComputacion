@@ -217,9 +217,22 @@ main()
 
 ### 4.5 Manejo de argumentos
 
-- **2 argumentos**: `java lrc.Reproductor cancion.mp3 cancion.lrc`
-- **1 argumento**: `java lrc.Reproductor cancion.mp3` — busca automáticamente `cancion.lrc`
-- **0 argumentos**: usa valores por defecto `cancion.mp3` y `cancion.lrc`
+- **2 argumentos**: `java lrc.Reproductor cancion.mp3 cancion.lrc` — rutas exactas (pueden incluir directorios)
+- **1 argumento**: `java lrc.Reproductor cancion.mp3` — busca el MP3 en `audio/` y deriva el LRC en `lyrics/`
+- **0 argumentos**: usa valores por defecto `audio/cancion.mp3` y `lyrics/cancion.lrc`
+
+### 4.6 Organización de archivos
+
+Los archivos de audio y letra se organizan en directorios separados para mantener el proyecto ordenado:
+
+```
+Tarea2/
+├── audio/       # Archivos .mp3
+├── lyrics/      # Archivos .lrc
+└── ...          # código fuente, librerías, etc.
+```
+
+Esta separación permite escalar el proyecto agregando más canciones sin desordenar la raíz del proyecto. La resolución de rutas en `main()` antepone automáticamente el directorio correspondiente según la extensión del archivo.
 
 ---
 
@@ -229,21 +242,21 @@ Se probó el reproductor con las siguientes canciones:
 
 | Canción | MP3 | LRC | Funciona |
 |---|---|---|---|
-| Evanescence — Bring Me To Life | `Evanescence - Bring Me To Life.mp3` | `bring me to life.lrc` | ✓ |
-| Pop Smoke — Dior | `Pop Smoke - Dior (Lyrics).mp3` | `Pop Smoke - Dior.lrc` | ✓ |
-| Metallica — Nothing Else Matters | *(pendiente de agregar)* | `nothing else matters.lrc` | — |
+| Evanescence — Bring Me To Life | `audio/Evanescence - Bring Me To Life.mp3` | `lyrics/bring me to life.lrc` | ✓ |
+| Pop Smoke — Dior | `audio/Pop Smoke - Dior (Lyrics).mp3` | `lyrics/Pop Smoke - Dior.lrc` | ✓ |
+| Metallica — Nothing Else Matters | *(pendiente de agregar)* | `lyrics/nothing else matters.lrc` | — |
 
 > **Nota:** Se requiere agregar el archivo MP3 correspondiente a "Nothing Else Matters" para completar las 3 canciones solicitadas. El archivo `.lrc` ya está presente en el proyecto.
 
 ### 5.1 Comando de prueba
 
 ```bash
-# Pop Smoke - Dior
+# Pop Smoke - Dior (1 argumento, busca LRC automáticamente)
 cd ~/FundamentosCsComputacion/Tarea2
-java -cp "lib/*:." lrc.Reproductor "Pop Smoke - Dior (Lyrics).mp3" "Pop Smoke - Dior.lrc"
+java -cp "lib/*:." lrc.Reproductor "Pop Smoke - Dior (Lyrics).mp3"
 
-# Evanescence - Bring Me To Life
-java -cp "lib/*:." lrc.Reproductor "Evanescence - Bring Me To Life.mp3" "bring me to life.lrc"
+# Evanescence - Bring Me To Life (2 argumentos, rutas explícitas)
+java -cp "lib/*:." lrc.Reproductor "audio/Evanescence - Bring Me To Life.mp3" "lyrics/bring me to life.lrc"
 ```
 
 ---
@@ -265,7 +278,11 @@ java -jar sablecc-3.7/lib/sablecc.jar lrc.sablecc
 ### 6.3 Ejecución
 
 ```bash
-java -cp "lib/*:." lrc.Reproductor <mp3> <lrc>
+# Con 1 argumento (MP3 en audio/, LRC se deriva en lyrics/)
+java -cp "lib/*:." lrc.Reproductor <cancion.mp3>
+
+# Con 2 argumentos (rutas explícitas)
+java -cp "lib/*:." lrc.Reproductor <ruta_mp3> <ruta_lrc>
 ```
 
 ---
@@ -274,6 +291,13 @@ java -cp "lib/*:." lrc.Reproductor <mp3> <lrc>
 
 ```
 Tarea2/
+├── audio/                     # Archivos de audio (.mp3)
+│   ├── Evanescence - Bring Me To Life.mp3
+│   └── Pop Smoke - Dior (Lyrics).mp3
+├── lyrics/                    # Archivos de letra (.lrc)
+│   ├── bring me to life.lrc
+│   ├── nothing else matters.lrc
+│   └── Pop Smoke - Dior.lrc
 ├── informe.md                 # Este informe
 ├── README.md                  # Instrucciones de uso
 ├── lrc.sablecc                # Gramática SableCC
@@ -288,9 +312,7 @@ Tarea2/
 │   ├── lexer/                 # Lexer generado
 │   ├── node/                  # Nodos del AST generados
 │   └── parser/                # Parser generado
-├── lib/                       # Bibliotecas (BasicPlayer, etc.)
-├── *.mp3                      # Archivos de audio
-└── *.lrc                      # Archivos de letra
+└── lib/                       # Bibliotecas (BasicPlayer, etc.)
 ```
 
 ---

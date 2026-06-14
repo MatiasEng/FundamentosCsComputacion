@@ -104,11 +104,11 @@ public class Reproductor {
                 mp3Path = args[0];
                 lrcPath = args[1];
             } else if (args.length == 1) {
-                mp3Path = args[0];
-                lrcPath = args[0].replaceAll("(?i)\\.mp3$", ".lrc");
+                mp3Path = "audio/" + args[0];
+                lrcPath = "lyrics/" + args[0].replaceAll("(?i)\\.mp3$", ".lrc");
             } else {
-                mp3Path = "cancion.mp3";
-                lrcPath = "cancion.lrc";
+                mp3Path = "audio/cancion.mp3";
+                lrcPath = "lyrics/cancion.lrc";
             }
 
             Reproductor reproductor = new Reproductor();
