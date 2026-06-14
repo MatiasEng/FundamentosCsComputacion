@@ -2,6 +2,7 @@ package lrc;
 
 import javazoom.jlgui.basicplayer.BasicPlayer;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Timer;
@@ -49,7 +50,7 @@ public class Reproductor {
     }
 
     private List<LyricEntry> parsearLRC(String ruta) throws Exception {
-        Lexer lexer = new Lexer(new PushbackReader(new FileReader(ruta), 1024));
+        Lexer lexer = new Lexer(new PushbackReader(new InputStreamReader(new FileInputStream(ruta), StandardCharsets.UTF_8), 1024));
         Parser parser = new Parser(lexer);
         Start ast = parser.parse();
         LyricVisitor visitor = new LyricVisitor();

@@ -2,7 +2,7 @@ Package lrc;
 
 Helpers
     digit = ['0' .. '9'];
-    letter = ['a' .. 'z'] | ['A' .. 'Z'];
+    letter = ['a' .. 'z'] | ['A' .. 'Z'] | ['\u00C0' .. '\u00FF'];
     cr = 13;
     lf = 10;
     newline = cr lf | lf | cr;
@@ -11,7 +11,7 @@ Helpers
 Tokens
     l_bracket = '[';
     r_bracket = ']';
-    bcontent = (letter | digit | ' ' | '.' | ',' | '!' | '?' | '-' | '_' | ';' | '/' | '\\' | '(' | ')' | '#' | '$' | '%' | '&' | '*' | '+' | '=' | '<' | '>' | '@' | '^' | '`' | '{' | '|' | '}' | '~' | apostrophe | ':')+;
+    bcontent = (letter | digit | ' ' | '.' | ',' | '!' | '?' | '-' | '_' | ';' | '/' | '\\' | '(' | ')' | '#' | '$' | '%' | '&' | '*' | '+' | '=' | '<' | '>' | '@' | '^' | '`' | '{' | '|' | '}' | '~' | apostrophe | ':' | '\u00A1' | '\u00BF')+;
     blank = ' ' | 9 | newline;
 
 Ignored Tokens
