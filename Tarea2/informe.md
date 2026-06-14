@@ -251,12 +251,12 @@ Se probó el reproductor con las siguientes canciones:
 ### 5.1 Comando de prueba
 
 ```bash
-# Pop Smoke - Dior (1 argumento, busca LRC automáticamente)
+# Con 1 argumento (MP3 en audio/, LRC se deriva en lyrics/)
 cd ~/FundamentosCsComputacion/Tarea2
-java -cp "lib/*:." lrc.Reproductor "Pop Smoke - Dior (Lyrics).mp3"
+java -cp "lib/*:." lrc.Reproductor "cancion.mp3"
 
-# Evanescence - Bring Me To Life (2 argumentos, rutas explícitas)
-java -cp "lib/*:." lrc.Reproductor "audio/Evanescence - Bring Me To Life.mp3" "lyrics/bring me to life.lrc"
+# Con 2 argumentos (rutas explícitas)
+java -cp "lib/*:." lrc.Reproductor "audio/cancion.mp3" "lyrics/cancion.lrc"
 ```
 
 ---
